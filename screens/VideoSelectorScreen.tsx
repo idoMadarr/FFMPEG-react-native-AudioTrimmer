@@ -1,20 +1,20 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ButtonElement from '../components/Resuable/ButtonElement';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import TextElement from '../components/Resuable/TextElement';
+import {navigate} from '../utils/navigationRef';
 
 const VideoSelectorScreen = () => {
   const uploadFile = async () => {
     try {
       const videoFile = await ImageCropPicker.openPicker({mediaType: 'video'});
       if (videoFile) {
-        console.log('video', videoFile);
-        return;
+        return navigate('video-convertor', {video: videoFile});
       }
     } catch (error) {
-      console.log('Error:', error);
+      Alert.alert('Error:', JSON.stringify(error));
     }
   };
 
@@ -25,9 +25,8 @@ const VideoSelectorScreen = () => {
         console.log('video', videoFile);
         return;
       }
-      console.log('not yet');
     } catch (error) {
-      console.log('Error:', error);
+      Alert.alert('Error:', JSON.stringify(error));
     }
   };
 

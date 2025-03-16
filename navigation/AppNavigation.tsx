@@ -1,22 +1,18 @@
 import React from 'react';
+import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {StatusBar} from 'react-native';
+import {navigationRef} from '../utils/navigationRef';
 import AudioTrimmerScreen from '../screens/AudioTrimmerScreen';
 import VideoSelectorScreen from '../screens/VideoSelectorScreen';
 import VideoConvertorScreen from '../screens/VideoConvertorScreen';
+import {RootStackParamList} from '../utils/types';
 
-type NavigationScreenParams = {
-  ['video-selector']: undefined;
-  ['video-convertor']: undefined;
-  ['audio-trimmer']: undefined;
-};
-
-const AppNavigator = createNativeStackNavigator<NavigationScreenParams>();
+const AppNavigator = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigation = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
       <AppNavigator.Navigator>
         <AppNavigator.Screen
