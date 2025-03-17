@@ -1,97 +1,91 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+FFMPEG The Basics:
 
-# Getting Started
+-i ${newCacheFilePath}  # Input file  
+-vn                     # Remove video (only keep audio)  
+-c:a libmp3lame         # Set audio codec to MP3 (LAME encoder)  
+-qscale:a 2             # Set audio quality (lower is better, 2 ≈ ~190kbps)  
+${downloadDir} # Output file path
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+### 🎵 Audio Processing Commands
 
-## Step 1: Start Metro
+# 1️⃣ Extract audio from video (MP3)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+-i input.mp4 -vn -acodec libmp3lame -q:a 2 output.mp3
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+# 2️⃣ Convert audio to AAC (Better for mobile)
 
-```sh
-# Using npm
-npm start
+-i input.mp3 -vn -c:a aac -b:a 128k output.aac
 
-# OR using Yarn
-yarn start
-```
+# 3️⃣ Trim audio (first 30s only)
 
-## Step 2: Build and run your app
+-i input.mp3 -ss 00:00:00 -t 30 -c copy output.mp3
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+# 4️⃣ Change audio speed (faster/slower)
 
-### Android
+-i input.mp3 -filter:a "atempo=1.5" -vn output.mp3
 
-```sh
-# Using npm
-npm run android
+# 5️⃣ Increase audio volume (boost 2x)
 
-# OR using Yarn
-yarn android
-```
+-i input.mp3 -filter:a "volume=2.0" -c:a libmp3lame output.mp3
 
-### iOS
+# 6️⃣ Convert audio to WAV (lossless)
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+-i input.mp3 -vn -c:a pcm_s16le output.wav
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+# 7️⃣ Merge multiple audio files into one
 
-```sh
-bundle install
-```
+-i "concat:file1.mp3|file2.mp3" -c copy output.mp3
 
-Then, and every time you update your native dependencies, run:
+# 8️⃣ Remove background noise (low-pass filter)
 
-```sh
-bundle exec pod install
-```
+-i input.mp3 -af "lowpass=3000" output.mp3
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+# 9️⃣ Convert stereo to mono
 
-```sh
-# Using npm
-npm run ios
+-i input.mp3 -ac 1 output.mp3
 
-# OR using Yarn
-yarn ios
-```
+# 🔟 Normalize audio volume (fix loudness issues)
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+-i input.mp3 -af "loudnorm" output.mp3
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### 🎥 Video Processing Commands
 
-## Step 3: Modify your app
+# 1️⃣ Compress video (reduce file size)
 
-Now that you have successfully run the app, let's make changes!
+-i input.mp4 -vcodec libx264 -crf 28 -preset fast -c:a aac -b:a 128k output.mp4
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+# 2️⃣ Convert video format (MP4 to WebM)
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+-i input.mp4 -c:v libvpx -b:v 1M -c:a libvorbis output.webm
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+# 3️⃣ Extract audio from video (MP3 output)
 
-## Congratulations! :tada:
+-i input.mp4 -vn -acodec libmp3lame -q:a 2 output.mp3
 
-You've successfully run and modified your React Native App. :partying_face:
+# 4️⃣ Trim video (first 30 seconds only)
 
-### Now what?
+-i input.mp4 -ss 00:00:00 -t 30 -c copy output.mp4
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+# 5️⃣ Change video resolution (resize to 720p)
 
-# Troubleshooting
+-i input.mp4 -vf scale=1280:720 -c:v libx264 -crf 23 -preset fast -c:a aac -b:a 128k output.mp4
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+# 6️⃣ Speed up or slow down video
 
-# Learn More
+-i input.mp4 -filter:v "setpts=0.5\*PTS" -filter:a "atempo=2.0" output.mp4
 
-To learn more about React Native, take a look at the following resources:
+# 7️⃣ Extract a frame from video (screenshot at 10s)
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+-i input.mp4 -ss 00:00:10 -vframes 1 -q:v 2 output.jpg
+
+# 8️⃣ Add a watermark to video
+
+-i input.mp4 -i watermark.png -filter_complex "overlay=10:10" output.mp4
+
+# 9️⃣ Rotate video (90° clockwise)
+
+-i input.mp4 -vf "transpose=1" output.mp4
+
+# 🔟 Merge two videos together
+
+-i video1.mp4 -i video2.mp4 -filter_complex "[0:v:0][1:v:0]concat=n=2:v=1[outv]" -map "[outv]" output.mp4
