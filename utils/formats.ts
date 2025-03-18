@@ -24,3 +24,23 @@ export const extractUrlString = (
   if (config.trimExt) return formattedFileName;
   return file;
 };
+
+type RangeOptions = {
+  value: number;
+  inputMin: number;
+  inputMax: number;
+  outputMin: number;
+  outputMax: number;
+};
+
+export const calcConvertingProgress = (options: RangeOptions) => {
+  const {value, inputMin, inputMax, outputMin, outputMax} = options;
+  const progress =
+    ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) +
+    outputMin;
+
+  if (progress === Infinity || progress < outputMin) return outputMin;
+  if (progress > outputMax) return outputMax;
+
+  return progress;
+};
