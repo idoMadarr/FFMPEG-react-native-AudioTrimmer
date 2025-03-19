@@ -1,19 +1,29 @@
 import React, {ReactNode} from 'react';
-import {Dimensions, StyleSheet, TouchableOpacity} from 'react-native';
+import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 interface ButtonElementPropsType {
   children: ReactNode;
   onPress?(): void;
+  enable?: boolean;
 }
 
 const ButtonElement: React.FC<ButtonElementPropsType> = ({
   children,
   onPress,
+  enable = true,
 }) => {
+  const CustomeButtonElement = enable ? TouchableOpacity : View;
   return (
-    <TouchableOpacity onPress={onPress} style={styles.buttonContainer}>
+    <CustomeButtonElement
+      onPress={onPress}
+      style={[
+        styles.buttonContainer,
+        {
+          borderColor: enable ? '#2e6eee' : '#696969',
+        },
+      ]}>
       {children}
-    </TouchableOpacity>
+    </CustomeButtonElement>
   );
 };
 
@@ -24,8 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#2e6eee',
+    borderWidth: 2,
     borderRadius: 8,
     margin: '2%',
   },

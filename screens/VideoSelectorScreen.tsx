@@ -2,7 +2,7 @@ import React from 'react';
 import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ButtonElement from '../components/Resuable/ButtonElement';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import TextElement from '../components/Resuable/TextElement';
 import {navigate} from '../utils/navigationRef';
 
@@ -35,11 +35,11 @@ const VideoSelectorScreen = () => {
       <TextElement fontSize={'xl'}>Select your video file:</TextElement>
       <View style={styles.row}>
         <ButtonElement onPress={uploadFile}>
-          <Icon name={'upload'} size={34} />
-          <TextElement fontSize={'lg'}>Upload</TextElement>
+          <FontAwesomeIcon name={'upload'} size={22} style={styles.icon} />
+          <TextElement fontSize={'lg'}>Select</TextElement>
         </ButtonElement>
         <ButtonElement onPress={openCamera}>
-          <Icon name={'camera'} size={34} />
+          <FontAwesomeIcon name={'camera'} size={22} style={styles.icon} />
           <TextElement fontSize={'lg'}>Camera</TextElement>
         </ButtonElement>
       </View>
@@ -59,6 +59,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  icon: {
+    marginHorizontal: 6,
   },
 });
 
