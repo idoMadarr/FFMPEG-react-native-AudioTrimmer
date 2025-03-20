@@ -5,3 +5,8 @@ export type RootStackParamList = {
   ['video-convertor']: {video: Video};
   ['audio-trimmer']: undefined;
 };
+
+export type ConvertedFileType = {
+  name: string;
+  path: string;
+};

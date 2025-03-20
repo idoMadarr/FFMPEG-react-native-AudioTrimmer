@@ -16,7 +16,7 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
 }) => {
   const [savedFileName, setSavedFileName] = useState('');
 
-  const {onExtract, loadingProgress} = useFFMPEG();
+  const {onExtract, onSave, loadingProgress} = useFFMPEG();
 
   const extractAudio = async () => {
     if (savedFileName.length) {
@@ -24,8 +24,6 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
       onExtract(path, savedFileName);
     }
   };
-
-  const onSave = async () => {};
 
   const onTrim = async () => {};
 
