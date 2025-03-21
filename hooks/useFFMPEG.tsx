@@ -45,9 +45,13 @@ const useFFMPEG = () => {
           // Getting final results
           const returnCode = await session.getReturnCode();
           if (ReturnCode.isSuccess(returnCode)) {
+            const ratesPath = (await storeAudioRates(
+              newCacheFilePath,
+            )) as string;
             return setConvertedFile({
               name: `${savedFileName}.mp4`,
               path: convertedCachesFilePath,
+              ratesPath,
             });
           }
 
@@ -81,6 +85,33 @@ const useFFMPEG = () => {
     }
   };
 
+  const storeAudioRates = async (path: string) => {
+    try {
+      // Storing audio rates inside CachesDir
+      // Audio rates looks like this:
+      // frame:52   pts:154720  pts_time:3.50839
+      // lavfi.astats.Overall.RMS_level=-31.166752
+      // frame:53   pts:157660  pts_time:3.57506
+      // lavfi.astats.Overall.RMS_level=-33.684179
+      // frame:54   pts:160600  pts_time:3.64172
+      // lavfi.astats.Overall.RMS_level=-31.354921
+      const cachesDir = fs.CachesDirectoryPath;
+      const filename = `${Date.now()}_log.txt`;
+      const outputPath = `${cachesDir}/${filename}`;
+
+      const AUDIO_SIZE = 15;
+      // 44.1 kHz
+      const samples = 44100 / AUDIO_SIZE;
+
+      const ffmpegCommand = `-i ${path} -af asetnsamples=${samples},astats=metadata=1:reset=1,ametadata=print:key=lavfi.astats.Overall.RMS_level:file=${outputPath} -f null -`;
+
+      await FFmpegKit.execute(ffmpegCommand);
+      return outputPath;
+    } catch (error) {
+      console.log('Error:', JSON.stringify(error));
+    }
+  };
+
   const onSave = async () => {
     // Notice: From android 10+ does't allow to store files in sub-folders
     if (convertedFile) {
@@ -90,13 +121,15 @@ const useFFMPEG = () => {
           `${fs.DownloadDirectoryPath}/${convertedFile.name}`,
         );
         Alert.alert('Success', 'file saved in Download folder.');
+        return true;
       } catch (error) {
         Alert.alert('Error', 'Operation failed, audio file can not be saved.');
+        return false;
       }
     }
   };
 
-  return {onExtract, onSave, loadingProgress};
+  return {convertedFile, onExtract, onSave, loadingProgress};
 };
 
 export default useFFMPEG;

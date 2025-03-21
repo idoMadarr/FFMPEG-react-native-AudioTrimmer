@@ -8,6 +8,8 @@ import {RootStackParamList} from '../utils/types';
 import ButtonElement from '../components/Resuable/ButtonElement';
 import LoadingProgress from '../components/LoadingProgress/LoadingProgress';
 import useFFMPEG from '../hooks/useFFMPEG';
+import {navigate} from '../utils/navigationRef';
+import {calcAudioRates} from '../utils/formats';
 
 type VideoConvertorRouteType = RouteProp<RootStackParamList, 'video-convertor'>;
 
@@ -15,8 +17,9 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
   route,
 }) => {
   const [savedFileName, setSavedFileName] = useState('');
+  const [anotherFile, setAnotherFile] = useState(false);
 
-  const {onExtract, onSave, loadingProgress} = useFFMPEG();
+  const {onExtract, onSave, convertedFile, loadingProgress} = useFFMPEG();
 
   const extractAudio = async () => {
     if (savedFileName.length) {
@@ -25,7 +28,21 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
     }
   };
 
-  const onTrim = async () => {};
+  const storeAudioFile = async () => {
+    const result = await onSave();
+    if (result) setAnotherFile(_ => true);
+  };
+
+  const selectAnother = () => {
+    setAnotherFile(false);
+    navigate('video-selector');
+  };
+
+  const onTrim = async () => {
+    if (convertedFile) {
+      calcAudioRates(convertedFile.ratesPath);
+    }
+  };
 
   return (
     <View style={styles.screen}>
@@ -51,9 +68,15 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
 
       {loadingProgress > 99 && (
         <Fragment>
-          <ButtonElement onPress={onSave}>
-            <Icon name={'save'} size={34} style={styles.icon} />
-            <TextElement fontSize={'lg'}>Save</TextElement>
+          <ButtonElement onPress={anotherFile ? selectAnother : storeAudioFile}>
+            <Icon
+              name={anotherFile ? 'upload' : 'save'}
+              size={34}
+              style={styles.icon}
+            />
+            <TextElement fontSize={'lg'}>
+              {anotherFile ? 'Select New' : 'Save'}
+            </TextElement>
           </ButtonElement>
           <ButtonElement onPress={onTrim}>
             <Icon name={'content-cut'} size={34} style={styles.icon} />

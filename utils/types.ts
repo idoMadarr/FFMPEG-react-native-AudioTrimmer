@@ -9,4 +9,13 @@ export type RootStackParamList = {
 export type ConvertedFileType = {
   name: string;
   path: string;
+  ratesPath: string;
+};
+
+export type RMSOptionType = {
+  rmsLevel: number;
+  minRMS: number;
+  maxRMS: number;
+  minHight: number;
+  maxHight: number;
 };
