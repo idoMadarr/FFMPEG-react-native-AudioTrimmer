@@ -1,3 +1,4 @@
+import {Alert} from 'react-native';
 import fs from 'react-native-fs';
 import {RMSOptionType} from './types';
 
@@ -62,14 +63,20 @@ export const calcAudioRates = async (path: string) => {
       return acc;
     }, []);
 
+    const pureRates = formattedRates.filter(rate => {
+      if (!isNaN(rate)) {
+        return rate;
+      }
+    });
+
     const minHightWave = 0; // px
     const maxHightWave = 30; // px
-    const minRMS = Math.min(...formattedRates);
-    const maxRMS = Math.max(...formattedRates);
+    const minRMS = Math.min(...pureRates);
+    const maxRMS = Math.max(...pureRates);
 
     const wavesArray = formattedRates.map(rate => {
       return convertRMSRatesToPixelHight({
-        rmsLevel: rate,
+        rmsLevel: isNaN(rate) ? minRMS : rate,
         minRMS,
         maxRMS,
         minHight: minHightWave,
@@ -77,10 +84,10 @@ export const calcAudioRates = async (path: string) => {
       });
     });
 
-    console.log(wavesArray);
+    return wavesArray;
   } catch (error) {
-    // return [];
-    console.log(error);
+    Alert.alert('Error', JSON.stringify(error));
+    return [];
   }
 };
 

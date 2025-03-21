@@ -1,5 +1,11 @@
 import React, {Fragment, useState} from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,7 +25,8 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
   const [savedFileName, setSavedFileName] = useState('');
   const [anotherFile, setAnotherFile] = useState(false);
 
-  const {onExtract, onSave, convertedFile, loadingProgress} = useFFMPEG();
+  const {onExtract, onSave, convertedFile, availableRates, loadingProgress} =
+    useFFMPEG();
 
   const extractAudio = async () => {
     if (savedFileName.length) {
@@ -40,12 +47,14 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
 
   const onTrim = async () => {
     if (convertedFile) {
-      calcAudioRates(convertedFile.ratesPath);
+      const wavesArray = await calcAudioRates(convertedFile.ratesPath);
+      console.log('asd');
+      navigate('audio-trimmer', {waves: wavesArray});
     }
   };
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       {loadingProgress === 0 && (
         <Fragment>
           <ButtonElement
@@ -78,9 +87,18 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
               {anotherFile ? 'Select New' : 'Save'}
             </TextElement>
           </ButtonElement>
-          <ButtonElement onPress={onTrim}>
-            <Icon name={'content-cut'} size={34} style={styles.icon} />
-            <TextElement fontSize={'lg'}>Trim</TextElement>
+          <ButtonElement onPress={availableRates ? onTrim : undefined}>
+            {availableRates ? (
+              <Fragment>
+                <Icon name={'content-cut'} size={34} style={styles.icon} />
+                <TextElement fontSize={'lg'}>Trim</TextElement>
+              </Fragment>
+            ) : (
+              <View>
+                <ActivityIndicator size={'small'} color={'black'} />
+                <TextElement fontSize={'sm'}>LOADING RATES</TextElement>
+              </View>
+            )}
           </ButtonElement>
         </Fragment>
       )}
@@ -88,7 +106,7 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
       {loadingProgress > 0 && loadingProgress < 99 && (
         <LoadingProgress progress={loadingProgress} />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

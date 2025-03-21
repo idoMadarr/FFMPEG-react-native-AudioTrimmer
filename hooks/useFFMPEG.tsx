@@ -8,12 +8,15 @@ import {ConvertedFileType} from '../utils/types';
 const useFFMPEG = () => {
   const [convertedFile, setConvertedFile] = useState<ConvertedFileType>();
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [availableRates, setAvailableAudioRates] = useState(false);
 
   // Extract audio from video file:
   // MP4: When you open an MP4, the system assumes it's a video file and plays it in the default media player.
   // MP3: When you open an MP3, the system assumes it's audio-only and suggests a dedicated music player (Spotify, SoundCloud, etc.).
   const onExtract = async (path: string, savedFileName: string) => {
     try {
+      // Rates
+      setAvailableAudioRates(false);
       // Formatting a new file name
       const {name, extension} = extractUrlString(path, {
         seperatedValues: true,
@@ -48,6 +51,7 @@ const useFFMPEG = () => {
             const ratesPath = (await storeAudioRates(
               newCacheFilePath,
             )) as string;
+            setAvailableAudioRates(true);
             return setConvertedFile({
               name: `${savedFileName}.mp4`,
               path: convertedCachesFilePath,
@@ -129,7 +133,7 @@ const useFFMPEG = () => {
     }
   };
 
-  return {convertedFile, onExtract, onSave, loadingProgress};
+  return {convertedFile, onExtract, onSave, availableRates, loadingProgress};
 };
 
 export default useFFMPEG;
