@@ -71,6 +71,14 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
             value={savedFileName}
             onChangeText={setSavedFileName}
             placeholder={'File name'}
+            style={{
+              padding: 8,
+              width: 200,
+              color: 'white',
+              borderWidth: 1,
+              borderColor: 'white',
+              borderRadius: 25,
+            }}
           />
         </Fragment>
       )}
@@ -95,7 +103,7 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
               </Fragment>
             ) : (
               <View>
-                <ActivityIndicator size={'small'} color={'black'} />
+                <ActivityIndicator size={'small'} color={'white'} />
                 <TextElement fontSize={'sm'}>LOADING RATES</TextElement>
               </View>
             )}
@@ -115,9 +123,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
   },
   icon: {
     marginHorizontal: 6,
+    color: 'white',
   },
 });
 

@@ -19,3 +19,10 @@ export type RMSOptionType = {
   minHight: number;
   maxHight: number;
 };
+
+export const enum StylesContstant {
+  WAVE_HIGHT = 70,
+  WAVE_PICKER = 60,
+  WAVE_WIDTH = 1,
+  WAVE_MARGIN = 4,
+}

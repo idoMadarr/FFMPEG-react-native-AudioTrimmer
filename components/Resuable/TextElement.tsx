@@ -22,7 +22,7 @@ const TextElement: React.FC<TextElementType> = ({
   const styles = StyleSheet.create({
     constants: {
       fontSize: setFontSize(fontSize),
-      color: 'black',
+      color: 'white',
     },
   });
 

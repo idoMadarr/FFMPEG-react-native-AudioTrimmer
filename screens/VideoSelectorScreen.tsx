@@ -49,9 +49,10 @@ const VideoSelectorScreen = () => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 0.85,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
   },
   title: {
     fontSize: 24,
@@ -62,6 +63,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginHorizontal: 6,
+    color: 'white',
   },
 });
 

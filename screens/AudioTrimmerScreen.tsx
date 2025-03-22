@@ -1,9 +1,8 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import TextElement from '../components/Resuable/TextElement';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../utils/types';
-import WavesTimeline from '../components/WavesTimeline/WavesTimeline';
+import {RootStackParamList, StylesContstant} from '../utils/types';
+import WavesTimeline from '../components/AudioTrimmerPartials/WavesTimeline';
 
 type AudioTrimmerRouteType = RouteProp<RootStackParamList, 'audio-trimmer'>;
 
@@ -14,7 +13,24 @@ const AudioTrimmerScreen: React.FC<{route: AudioTrimmerRouteType}> = ({
 
   return (
     <SafeAreaView style={styles.screen}>
-      <WavesTimeline waves={waves} />
+      <WavesTimeline>
+        {waves.map((rate, index) => (
+          <View
+            key={index}
+            style={[
+              styles.wave,
+              {
+                height: rate + 1,
+                width: StylesContstant.WAVE_WIDTH,
+                marginRight:
+                  index === waves.length - 1 ? 0 : StylesContstant.WAVE_MARGIN,
+                top: -(rate / 2),
+                transform: [{translateY: StylesContstant.WAVE_HIGHT / 2}],
+              },
+            ]}
+          />
+        ))}
+      </WavesTimeline>
     </SafeAreaView>
   );
 };
@@ -24,6 +40,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  wave: {
+    backgroundColor: 'white',
   },
 });
 

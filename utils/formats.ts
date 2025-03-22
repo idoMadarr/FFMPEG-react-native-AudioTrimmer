@@ -1,6 +1,6 @@
 import {Alert} from 'react-native';
 import fs from 'react-native-fs';
-import {RMSOptionType} from './types';
+import {RMSOptionType, StylesContstant} from './types';
 
 type ExtractUrlConfig = {
   trimExt?: boolean;
@@ -70,7 +70,7 @@ export const calcAudioRates = async (path: string) => {
     });
 
     const minHightWave = 0; // px
-    const maxHightWave = 30; // px
+    const maxHightWave = StylesContstant.WAVE_PICKER; // px
     const minRMS = Math.min(...pureRates);
     const maxRMS = Math.max(...pureRates);
 

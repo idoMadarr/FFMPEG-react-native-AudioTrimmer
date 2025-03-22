@@ -13,8 +13,8 @@ const AppNavigator = createNativeStackNavigator<RootStackParamList>();
 const AppNavigation = () => {
   return (
     <NavigationContainer ref={navigationRef}>
-      <StatusBar backgroundColor={'white'} barStyle={'dark-content'} />
-      <AppNavigator.Navigator>
+      <StatusBar backgroundColor={'black'} barStyle={'light-content'} />
+      <AppNavigator.Navigator screenOptions={{headerShown: false}}>
         <AppNavigator.Screen
           name={'video-selector'}
           component={VideoSelectorScreen}
