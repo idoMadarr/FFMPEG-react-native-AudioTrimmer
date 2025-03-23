@@ -13,7 +13,7 @@ const AudioTrimmerScreen: React.FC<{route: AudioTrimmerRouteType}> = ({
 
   return (
     <SafeAreaView style={styles.screen}>
-      <WavesTimeline>
+      <WavesTimeline sliderWidth={waves.length * StylesContstant.SLIDER_SIZE}>
         {waves.map((rate, index) => (
           <View
             key={index}
@@ -22,10 +22,11 @@ const AudioTrimmerScreen: React.FC<{route: AudioTrimmerRouteType}> = ({
               {
                 height: rate + 1,
                 width: StylesContstant.WAVE_WIDTH,
+                borderRadius: 6,
                 marginRight:
                   index === waves.length - 1 ? 0 : StylesContstant.WAVE_MARGIN,
                 top: -(rate / 2),
-                transform: [{translateY: StylesContstant.WAVE_HIGHT / 2}],
+                transform: [{translateY: StylesContstant.WAVE_MAX_HIGHT / 2}],
               },
             ]}
           />

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TextElement from '../components/Resuable/TextElement';
 import {RootStackParamList} from '../utils/types';
@@ -86,7 +86,7 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
       {loadingProgress > 99 && (
         <Fragment>
           <ButtonElement onPress={anotherFile ? selectAnother : storeAudioFile}>
-            <Icon
+            <MaterialIcons
               name={anotherFile ? 'upload' : 'save'}
               size={34}
               style={styles.icon}
@@ -98,7 +98,11 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
           <ButtonElement onPress={availableRates ? onTrim : undefined}>
             {availableRates ? (
               <Fragment>
-                <Icon name={'content-cut'} size={34} style={styles.icon} />
+                <MaterialIcons
+                  name={'content-cut'}
+                  size={34}
+                  style={styles.icon}
+                />
                 <TextElement fontSize={'lg'}>Trim</TextElement>
               </Fragment>
             ) : (

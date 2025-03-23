@@ -21,8 +21,10 @@ export type RMSOptionType = {
 };
 
 export const enum StylesContstant {
-  WAVE_HIGHT = 70,
-  WAVE_PICKER = 60,
-  WAVE_WIDTH = 1,
+  WAVE_MAX_HIGHT = 70,
+  WAVE_WIDTH = 3,
   WAVE_MARGIN = 4,
+  THUMB_HIGHT = 70,
+  THUMB_WIDTH = 50,
+  SLIDER_SIZE = StylesContstant.WAVE_MARGIN + StylesContstant.WAVE_WIDTH,
 }

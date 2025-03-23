@@ -70,7 +70,7 @@ export const calcAudioRates = async (path: string) => {
     });
 
     const minHightWave = 0; // px
-    const maxHightWave = StylesContstant.WAVE_PICKER; // px
+    const maxHightWave = StylesContstant.WAVE_MAX_HIGHT - 10; // px
     const minRMS = Math.min(...pureRates);
     const maxRMS = Math.max(...pureRates);
 
