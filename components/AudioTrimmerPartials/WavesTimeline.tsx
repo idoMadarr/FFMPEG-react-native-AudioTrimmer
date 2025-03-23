@@ -35,9 +35,12 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
       leftThumbStartPositionX.value = leftThumbPositionX.value;
     })
     .onUpdate(event => {
+      const position = leftThumbStartPositionX.value + event.translationX;
+      const minClamp = 0;
+      const maxClamp = rightThumbPositionX.value - 100;
       leftThumbPositionX.value = Math.max(
-        0,
-        leftThumbStartPositionX.value + event.translationX,
+        minClamp,
+        Math.min(position, maxClamp),
       );
     });
 
@@ -46,9 +49,13 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
       rightThumbStartPositionX.value = rightThumbPositionX.value;
     })
     .onUpdate(event => {
-      rightThumbPositionX.value = Math.min(
-        sliderWidth,
-        rightThumbStartPositionX.value + event.translationX,
+      const position = rightThumbStartPositionX.value + event.translationX;
+      const minClamp = leftThumbPositionX.value + 100;
+      const maxClamp = sliderWidth;
+
+      rightThumbPositionX.value = Math.max(
+        minClamp,
+        Math.min(position, maxClamp),
       );
     });
 
