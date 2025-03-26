@@ -117,7 +117,7 @@ export const calcMinAndMaxValues = (
   const maxSliderValueNormalized = rightThumbPositionX / sliderWidth;
   const stepsFromMax = maxSliderValueNormalized * stepsInRange;
   const roundedStepsMax = Math.floor(stepsFromMax);
-  const maxValue = max + roundedStepsMax * step;
+  const maxValue = min + roundedStepsMax * step;
 
   return {minValue: minValue, maxValue: maxValue};
 };
