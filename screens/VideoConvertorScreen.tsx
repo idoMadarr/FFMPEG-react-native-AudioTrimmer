@@ -1,6 +1,7 @@
 import React, {Fragment, useState} from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   TextInput,
@@ -25,8 +26,14 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
   const [savedFileName, setSavedFileName] = useState('');
   const [anotherFile, setAnotherFile] = useState(false);
 
-  const {onExtract, onSave, convertedFile, availableRates, loadingProgress} =
-    useFFMPEG();
+  const {
+    onExtract,
+    onTrim,
+    onSave,
+    convertedFile,
+    availableRates,
+    loadingProgress,
+  } = useFFMPEG();
 
   const extractAudio = async () => {
     if (savedFileName.length) {
@@ -45,11 +52,14 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
     navigate('video-selector');
   };
 
-  const onTrim = async () => {
+  const trimNavigate = async () => {
     if (convertedFile) {
       const wavesArray = await calcAudioRates(convertedFile.ratesPath);
-      console.log('asd');
-      navigate('audio-trimmer', {waves: wavesArray});
+      navigate('audio-trimmer', {
+        waves: wavesArray,
+        path: convertedFile.path,
+        onTrim,
+      });
     }
   };
 
@@ -62,23 +72,17 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
             enable={savedFileName.length ? true : false}>
             <MaterialCommunityIcon
               name={'filmstrip'}
-              size={34}
+              size={26}
               style={styles.icon}
             />
-            <TextElement fontSize={'lg'}>Extract</TextElement>
+            <TextElement>Extract</TextElement>
           </ButtonElement>
           <TextInput
             value={savedFileName}
             onChangeText={setSavedFileName}
             placeholder={'File name'}
-            style={{
-              padding: 8,
-              width: 200,
-              color: 'white',
-              borderWidth: 1,
-              borderColor: 'white',
-              borderRadius: 25,
-            }}
+            placeholderTextColor={'white'}
+            style={styles.textinput}
           />
         </Fragment>
       )}
@@ -91,19 +95,17 @@ const VideoConvertorScreen: React.FC<{route: VideoConvertorRouteType}> = ({
               size={34}
               style={styles.icon}
             />
-            <TextElement fontSize={'lg'}>
-              {anotherFile ? 'Select New' : 'Save'}
-            </TextElement>
+            <TextElement>{anotherFile ? 'Select New' : 'Save'}</TextElement>
           </ButtonElement>
-          <ButtonElement onPress={availableRates ? onTrim : undefined}>
+          <ButtonElement onPress={availableRates ? trimNavigate : undefined}>
             {availableRates ? (
               <Fragment>
                 <MaterialIcons
                   name={'content-cut'}
-                  size={34}
+                  size={30}
                   style={styles.icon}
                 />
-                <TextElement fontSize={'lg'}>Trim</TextElement>
+                <TextElement>Trim</TextElement>
               </Fragment>
             ) : (
               <View>
@@ -132,6 +134,15 @@ const styles = StyleSheet.create({
   icon: {
     marginHorizontal: 6,
     color: 'white',
+  },
+  textinput: {
+    paddingLeft: '5%',
+    width: Dimensions.get('window').width * 0.4,
+    height: Dimensions.get('window').height * 0.065,
+    color: 'white',
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 25,
   },
 });
 

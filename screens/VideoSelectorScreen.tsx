@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
+import {Alert, Dimensions, SafeAreaView, StyleSheet, View} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ButtonElement from '../components/Resuable/ButtonElement';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
@@ -13,36 +13,29 @@ const VideoSelectorScreen = () => {
       if (videoFile) {
         return navigate('video-convertor', {video: videoFile});
       }
-    } catch (error) {
-      Alert.alert('Error:', JSON.stringify(error));
-    }
-  };
-
-  const openCamera = async () => {
-    try {
-      const videoFile = await ImageCropPicker.openCamera({});
-      if (videoFile) {
-        console.log('video', videoFile);
-        return;
+    } catch (error: unknown) {
+      if (typeof error === 'object' && error !== null && 'code' in error) {
+        const errorObj = error as {code: string};
+        if (errorObj.code.includes('CANCELLED')) return;
       }
-    } catch (error) {
+
       Alert.alert('Error:', JSON.stringify(error));
     }
   };
 
   return (
     <SafeAreaView style={styles.screen}>
-      <TextElement fontSize={'xl'}>Select your video file:</TextElement>
-      <View style={styles.row}>
-        <ButtonElement onPress={uploadFile}>
-          <FontAwesomeIcon name={'upload'} size={22} style={styles.icon} />
-          <TextElement fontSize={'lg'}>Select</TextElement>
-        </ButtonElement>
-        <ButtonElement onPress={openCamera}>
-          <FontAwesomeIcon name={'camera'} size={22} style={styles.icon} />
-          <TextElement fontSize={'lg'}>Camera</TextElement>
-        </ButtonElement>
+      <View style={styles.titleContainer}>
+        <TextElement fontSize={'xl'}>Upload Video File</TextElement>
+        <TextElement cStyle={styles.title}>
+          Easily extract audio from any video and trim it to perfection. Select
+          your clip, cut the best part, and export in high quality.
+        </TextElement>
       </View>
+      <ButtonElement onPress={uploadFile}>
+        <FontAwesomeIcon name={'upload'} size={22} style={styles.icon} />
+        <TextElement>Select</TextElement>
+      </ButtonElement>
     </SafeAreaView>
   );
 };
@@ -54,9 +47,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
+  titleContainer: {
+    width: Dimensions.get('window').width * 0.85,
+    alignItems: 'center',
+    marginVertical: '6%',
+  },
   title: {
-    fontSize: 24,
-    marginVertical: 12,
+    textAlign: 'center',
   },
   row: {
     flexDirection: 'row',

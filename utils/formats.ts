@@ -133,5 +133,5 @@ export const waveToTimestamp = (wave: number, wavePerSecond: number) => {
   const formattedSeconds = seconds.toString().padStart(2, '0');
   const formattedCentiSeconds = centiSeconds.toString().padStart(2, '0');
 
-  return `${formattedMinutes}:${formattedSeconds}:${formattedCentiSeconds}`;
+  return `${formattedMinutes}:${formattedSeconds}.${formattedCentiSeconds}`;
 };

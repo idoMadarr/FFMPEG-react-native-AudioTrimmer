@@ -4,6 +4,7 @@ import fs from 'react-native-fs';
 import {FFmpegKit, FFprobeKit, ReturnCode} from 'ffmpeg-kit-react-native';
 import {calcConvertingProgress, extractUrlString} from '../utils/formats';
 import {ConvertedFileType} from '../utils/types';
+import {goBack} from '../utils/navigationRef';
 
 export const AUDIO_SIZE = 15;
 
@@ -70,9 +71,7 @@ const useFFMPEG = () => {
 
           Alert.alert('Error', 'Something went worng during the proccess.');
         },
-        log => {
-          // console.log(log.getMessage());
-        },
+        log => {},
         statistics => {
           // Getting in real time precentage of the finish proccess (for dynamic progress bar)
           const progress = calcConvertingProgress({
@@ -117,6 +116,21 @@ const useFFMPEG = () => {
     }
   };
 
+  const onTrim = async (path: string, start: string, end: string) => {
+    try {
+      if (convertedFile) {
+        const outputDir = `${fs.DownloadDirectoryPath}/trimmed_${convertedFile.name}`;
+        const ffmpegCommand = `-i ${path} -ss ${start} -to ${end} -c copy ${outputDir}`;
+        await FFmpegKit.execute(ffmpegCommand);
+        Alert.alert('Success', 'trimmed file saved in Download folder.', [
+          {text: 'Back', onPress: goBack},
+        ]);
+      }
+    } catch (error) {
+      Alert.alert('Trim Error:', JSON.stringify(error));
+    }
+  };
+
   const onSave = async () => {
     // Notice: From android 10+ does't allow to store files in sub-folders
     if (convertedFile) {
@@ -134,7 +148,14 @@ const useFFMPEG = () => {
     }
   };
 
-  return {convertedFile, onExtract, onSave, availableRates, loadingProgress};
+  return {
+    convertedFile,
+    onExtract,
+    onSave,
+    onTrim,
+    availableRates,
+    loadingProgress,
+  };
 };
 
 export default useFFMPEG;

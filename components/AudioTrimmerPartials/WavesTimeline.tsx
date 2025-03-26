@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
-import {StylesContstant} from '../../utils/types';
+import {PRIMARY_COLOR, StylesContstant} from '../../utils/types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
@@ -119,8 +119,8 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
   return (
     <View style={styles.timelineContainer}>
       <View style={styles.timestampsContainer}>
-        <TextElement fontSize={'lg'}>{timestampsStart}</TextElement>
-        <TextElement fontSize={'lg'}>{timestampsEnd}</TextElement>
+        <TextElement>{timestampsStart}</TextElement>
+        <TextElement>{timestampsEnd}</TextElement>
       </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
         <View style={[styles.constantRails, {width: sliderWidth}]}>
@@ -163,6 +163,7 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
 const styles = StyleSheet.create({
   timelineContainer: {
     height: Dimensions.get('window').height * 0.15,
+    marginVertical: '16%',
   },
   constantRails: {
     height: StylesContstant.WAVE_MAX_HIGHT,
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     height: StylesContstant.WAVE_MAX_HIGHT,
     flexDirection: 'row',
     position: 'absolute',
-    backgroundColor: 'rgba(51, 202, 255, 0.8)',
+    backgroundColor: PRIMARY_COLOR,
     overflow: 'hidden',
     borderRadius: 16,
   },
@@ -199,6 +200,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   timestampsContainer: {
+    marginBottom: '2%',
     marginHorizontal: '2%',
     flexDirection: 'row',
     justifyContent: 'space-between',

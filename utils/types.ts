@@ -3,7 +3,11 @@ import {Video} from 'react-native-image-crop-picker';
 export type RootStackParamList = {
   ['video-selector']: undefined;
   ['video-convertor']: {video: Video};
-  ['audio-trimmer']: {waves: number[]};
+  ['audio-trimmer']: {
+    waves: number[];
+    path: string;
+    onTrim(path: string, mix: string, max: string): void;
+  };
 };
 
 export type ConvertedFileType = {
@@ -28,3 +32,5 @@ export const enum StylesContstant {
   THUMB_WIDTH = 50,
   SLIDER_SIZE = StylesContstant.WAVE_MARGIN + StylesContstant.WAVE_WIDTH,
 }
+
+export const PRIMARY_COLOR = 'rgba(51, 202, 255, 0.8)';

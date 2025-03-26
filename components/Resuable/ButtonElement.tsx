@@ -1,5 +1,6 @@
 import React, {ReactNode} from 'react';
 import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {PRIMARY_COLOR} from '../../utils/types';
 
 interface ButtonElementPropsType {
   children: ReactNode;
@@ -19,7 +20,7 @@ const ButtonElement: React.FC<ButtonElementPropsType> = ({
       style={[
         styles.buttonContainer,
         {
-          borderColor: enable ? '#2e6eee' : '#696969',
+          borderColor: enable ? PRIMARY_COLOR : '#696969',
         },
       ]}>
       {children}
