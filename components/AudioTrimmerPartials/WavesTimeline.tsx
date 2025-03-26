@@ -4,18 +4,33 @@ import {StylesContstant} from '../../utils/types';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {calcMinAndMaxValues} from '../../utils/formats';
+import TextElement from '../Resuable/TextElement';
 
 interface WavesTimelinePropsType {
   children: ReactNode;
   sliderWidth: number;
+  min: number;
+  max: number;
+  step: number;
+  onChangeHandler(values: {minValue: number; maxValue: number}): void;
+  timestampsStart: string;
+  timestampsEnd: string;
 }
 
 const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
-  sliderWidth,
   children,
+  sliderWidth,
+  min,
+  max,
+  step,
+  onChangeHandler,
+  timestampsStart,
+  timestampsEnd,
 }) => {
   const rightThumbPositionX = useSharedValue(sliderWidth);
   const rightThumbStartPositionX = useSharedValue(0);
@@ -30,6 +45,15 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
     transform: [{translateX: rightThumbPositionX.value}],
   }));
 
+  const activeRailsAnimation = useAnimatedStyle(() => ({
+    width: rightThumbPositionX.value - leftThumbPositionX.value,
+    transform: [{translateX: leftThumbPositionX.value}],
+  }));
+
+  const innerActiveRailsAnimation = useAnimatedStyle(() => ({
+    transform: [{translateX: -leftThumbPositionX.value}],
+  }));
+
   const startingTrim = Gesture.Pan()
     .onStart(_event => {
       leftThumbStartPositionX.value = leftThumbPositionX.value;
@@ -42,6 +66,17 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
         minClamp,
         Math.min(position, maxClamp),
       );
+    })
+    .onEnd(() => {
+      const values = calcMinAndMaxValues(
+        leftThumbPositionX.value,
+        rightThumbPositionX.value,
+        min,
+        max,
+        step,
+        sliderWidth,
+      );
+      runOnJS(onChangeHandler)(values);
     });
 
   const endingTrim = Gesture.Pan()
@@ -57,6 +92,18 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
         minClamp,
         Math.min(position, maxClamp),
       );
+    })
+    .onEnd(() => {
+      const values = calcMinAndMaxValues(
+        leftThumbPositionX.value,
+        rightThumbPositionX.value,
+        min,
+        max,
+        step,
+        sliderWidth,
+      );
+
+      runOnJS(onChangeHandler)(values);
     });
 
   const thumbRight = {
@@ -71,11 +118,21 @@ const WavesTimeline: React.FC<WavesTimelinePropsType> = ({
 
   return (
     <View style={styles.timelineContainer}>
+      <View style={styles.timestampsContainer}>
+        <TextElement fontSize={'lg'}>{timestampsStart}</TextElement>
+        <TextElement fontSize={'lg'}>{timestampsEnd}</TextElement>
+      </View>
       <ScrollView showsHorizontalScrollIndicator={false} horizontal={true}>
         <View style={[styles.constantRails, {width: sliderWidth}]}>
           {children}
         </View>
-        <View style={styles.activeRails}>{children}</View>
+
+        <Animated.View style={[styles.activeRails, activeRailsAnimation]}>
+          <Animated.View
+            style={[styles.activeRails, innerActiveRailsAnimation]}>
+            {children}
+          </Animated.View>
+        </Animated.View>
 
         <GestureDetector gesture={startingTrim}>
           <Animated.View
@@ -113,10 +170,16 @@ const styles = StyleSheet.create({
   },
   activeRails: {
     height: StylesContstant.WAVE_MAX_HIGHT,
-    width: '5%',
     flexDirection: 'row',
     position: 'absolute',
     backgroundColor: 'rgba(51, 202, 255, 0.8)',
+    overflow: 'hidden',
+    borderRadius: 16,
+  },
+  innerActiveRails: {
+    height: StylesContstant.WAVE_MAX_HIGHT,
+    flexDirection: 'row',
+    position: 'absolute',
     overflow: 'hidden',
     borderRadius: 16,
   },
@@ -134,6 +197,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: 'white',
+  },
+  timestampsContainer: {
+    marginHorizontal: '2%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

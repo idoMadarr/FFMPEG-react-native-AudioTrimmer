@@ -98,3 +98,40 @@ const convertRMSRatesToPixelHight = (rms: RMSOptionType) => {
   const waveHight = wavePosition * (maxHight - minHight) + minHight;
   return waveHight;
 };
+
+export const calcMinAndMaxValues = (
+  leftThumbPositionX: number,
+  rightThumbPositionX: number,
+  min: number,
+  max: number,
+  step: number,
+  sliderWidth: number,
+) => {
+  'worklet';
+  const minSliderValueNormalized = leftThumbPositionX / sliderWidth;
+  const stepsInRange = (max - min) / step;
+  const stepsFromMin = minSliderValueNormalized * stepsInRange;
+  const roundedStepsMin = Math.floor(stepsFromMin);
+  const minValue = min + roundedStepsMin * step;
+
+  const maxSliderValueNormalized = rightThumbPositionX / sliderWidth;
+  const stepsFromMax = maxSliderValueNormalized * stepsInRange;
+  const roundedStepsMax = Math.floor(stepsFromMax);
+  const maxValue = max + roundedStepsMax * step;
+
+  return {minValue: minValue, maxValue: maxValue};
+};
+
+export const waveToTimestamp = (wave: number, wavePerSecond: number) => {
+  const totalSeconds = wave / wavePerSecond;
+
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = Math.floor(totalSeconds % 60);
+  const centiSeconds = Math.floor((totalSeconds % 1) * 100);
+
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedSeconds = seconds.toString().padStart(2, '0');
+  const formattedCentiSeconds = centiSeconds.toString().padStart(2, '0');
+
+  return `${formattedMinutes}:${formattedSeconds}:${formattedCentiSeconds}`;
+};

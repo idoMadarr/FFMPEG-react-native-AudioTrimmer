@@ -5,6 +5,8 @@ import {FFmpegKit, FFprobeKit, ReturnCode} from 'ffmpeg-kit-react-native';
 import {calcConvertingProgress, extractUrlString} from '../utils/formats';
 import {ConvertedFileType} from '../utils/types';
 
+export const AUDIO_SIZE = 15;
+
 const useFFMPEG = () => {
   const [convertedFile, setConvertedFile] = useState<ConvertedFileType>();
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -103,7 +105,6 @@ const useFFMPEG = () => {
       const filename = `${Date.now()}_log.txt`;
       const outputPath = `${cachesDir}/${filename}`;
 
-      const AUDIO_SIZE = 15;
       // 44.1 kHz
       const samples = 44100 / AUDIO_SIZE;
 
